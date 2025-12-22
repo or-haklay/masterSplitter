@@ -1,10 +1,10 @@
 import { useState } from 'react'
 
 
-export default function Register() {
+export default function Logout() {
     return (
         <div>
-            <h1>Register</h1>
+            <h1>Logout</h1>
         </div>
     )
 }

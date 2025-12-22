@@ -1,34 +1,62 @@
-import httpService from './httpService'
+import httpServices from './httpServices'
+import { jwtDecode } from "jwt-decode"
+import { useEffect } from "react";
 
-function getUser() {
-    return httpService.get('/users/')
+const TOKEN_KEY = "token";
+refreshToken();
+
+async function getUserData(userId) {
+    const response = await httpServices.get(`/users/${userId || "me"}`);
+    return response.data;
+  }
+
+async function login(user) {
+    const response = await httpServices.post('/users/login/', user)
+    setToken(response.data.token)
+    console.log(response);
+    
+    return response.data.token
 }
 
-function createUser(user) {
-    return httpService.post('/users/', user)
+async function register(user) {
+    const response = await httpServices.post('/auth/register/', user)
+    setToken(response.data.token)
+    return response.data
 }
 
-function updateUser(user) {
-    return httpService.put('/users/', user)
-}
+function setToken(token) {
+    localStorage.setItem(TOKEN_KEY, token);
+    refreshToken();
+  }
 
-function deleteUser(user) {
-    return httpService.delete('/users/', user)
-}
+  function logOut() {
+    setToken(null);
+  }
+  
+  function refreshToken() {
+    httpServices.setDefaultCommonHeaders("x-auth-token", getJWT());
+  }
+  
+  function getJWT() {
+    return localStorage.getItem(TOKEN_KEY);
+  }
 
-function login(user) {
-    return httpService.post('/auth/login/', user)
-}
-
-function register(user) {
-    return httpService.post('/auth/register/', user)
-}
+  function getUser() {
+    try {
+      const token = getJWT();
+      return jwtDecode(token);
+    } catch {
+      return null;
+    }
+  }
 
 export default {
-    getUser,
-    createUser,
-    updateUser,
-    deleteUser,
+    getUserData,
     login,
     register,
+    setToken,
+    logOut,
+    refreshToken,
+    getJWT,
+    getUser,
 }

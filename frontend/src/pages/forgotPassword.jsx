@@ -1,10 +1,10 @@
 import { useState } from 'react'
 
 
-export default function Register() {
+export default function ForgotPassword() {
     return (
         <div>
-            <h1>Register</h1>
+            <h1>Forgot Password</h1>
         </div>
     )
 }

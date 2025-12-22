@@ -1,10 +1,10 @@
 import { useState } from 'react'
 
 
-export default function Register() {
+export default function ConnectApartment() {
     return (
         <div>
-            <h1>Register</h1>
+            <h1>Connect Apartment</h1>
         </div>
     )
 }

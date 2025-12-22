@@ -1,0 +1,29 @@
+.my-bg-primary { background-color: #DCF8C6; }
+.my-bg-secondary { background-color: #075E54; }
+.my-bg-tertiary { background-color: #25D366; }
+.my-bg-quaternary { background-color: #ECE5DD; }
+
+.my-text-primary { color: #075E54; }
+.my-text-secondary { color: #25D366; }
+.my-text-tertiary { color: #ECE5DD; }
+.my-text-quaternary { color: #DCF8C6; }
+
+.my-text-primary-light { color: #DCF8C6; }
+.my-text-secondary-light { color: #25D366; }
+.my-text-tertiary-light { color: #ECE5DD; }
+.my-text-quaternary-light { color: #075E54; }
+
+.my-text-primary-dark { color: #075E54; }
+.my-text-secondary-dark { color: #25D366; }
+.my-text-tertiary-dark { color: #ECE5DD; }
+.my-text-quaternary-dark { color: #DCF8C6; }
+
+.my-bg-primary-light { background-color: #DCF8C6; }
+.my-bg-secondary-light { background-color: #25D366; }
+.my-bg-tertiary-light { background-color: #ECE5DD; }
+.my-bg-quaternary-light { background-color: #075E54; }
+
+.my-bg-primary-dark { background-color: #075E54; }
+.my-bg-secondary-dark { background-color: #25D366; }
+.my-bg-tertiary-dark { background-color: #ECE5DD; }
+.my-bg-quaternary-dark { background-color: #DCF8C6; }
