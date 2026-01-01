@@ -53,7 +53,8 @@ export function AuthProvider({ children }) {
   
   const logOut = () => {
     userService.logOut();
-    refreshUser();
+    setUser(null);
+    setUserData(null);
   };
 
   return (

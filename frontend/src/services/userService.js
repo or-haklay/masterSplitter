@@ -19,7 +19,7 @@ async function login(user) {
 }
 
 async function register(user) {
-    const response = await httpServices.post('/auth/register/', user)
+    const response = await httpServices.post('/users/register/', user)
     setToken(response.data.token)
     return response.data
 }

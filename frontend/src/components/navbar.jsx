@@ -1,11 +1,15 @@
 import { Link, useNavigate } from 'react-router-dom'
 import logo from '../assets/logo.png'
 import useAuth from '../../context/auth.context.jsx'
+import { useEffect } from 'react';
 
 export default function Navbar() {
     const navigate = useNavigate();
     const { userData } = useAuth();
-    console.log("userID", userData);
+
+    useEffect(() => {
+    }, [userData]);
+
     if(!userData) {
         return null;
     }

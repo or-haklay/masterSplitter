@@ -1,10 +1,23 @@
 import httpServices from './httpServices'
 
-async function getMyApartmentId() {
+async function getMyApartment() {
     const response = await httpServices.get('/apartments/my')
-    return response.data.apartmentId
+    return response
 }
 
+async function connectToGroup(groupCode) {
+    const response = await httpServices.post('/apartments/connect-group', { groupCode: groupCode })
+    return response
+}
+
+async function getInviteCode() {
+    const response = await httpServices.get('/apartments/invite-code')
+    return response
+}
+
+
 export default {
-    getMyApartmentId,
+    getMyApartment,
+    connectToGroup,
+    getInviteCode,
 }

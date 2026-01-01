@@ -4,34 +4,67 @@ import Header from '../components/header'
 import PieChartComponent from '../components/pieChart'
 import useAuth from "../../context/auth.context.jsx";
 import { useState, useEffect } from 'react';
+import expensesServices from '../services/expensesServices'
+import { toast } from 'react-hot-toast'
 
 function Home() {
-    const { userData } = useAuth();
-    const [owned, setOwned] = useState({
-        yuval: 100,
-        mika: -200,
-    })
+    const [expenses, setExpenses] = useState([])
+    const { user, userData } = useAuth();
+    const [owned, setOwned] = useState([])
 
-    const data = [
-        { y: 400, label: "or" },
-        { y: 300, label: "yuval" },
-        { y: 500, label: "mika" }	
-        ];
+    const [data, setData] = useState()
 
+    // get expenses
     useEffect(() => {
-        async function getOwned() {
-        let newOwned = {};
-        const userName = (userData?.user?.name?.split(" ")[0]);
-        console.log("userName: ", userName);
-        data.forEach((item) => {
-            if (item.label.toLowerCase() !== userName.toLowerCase() ) {
-                newOwned[item.label] = item.y;
-            } 
-        });
-        setOwned((prev) => ({ ...prev, ...newOwned }));
+        async function getExpenses() {
+            const resExpenses = await expensesServices.getApartmentExpenses(userData?.user?.apartmentId)
+            if (resExpenses) {
+                setExpenses(resExpenses.expenses)
+            } else {
+                toast.error(resExpenses.message)
+            }
+        }
+        if (userData?.user?.apartmentId) {
+            getExpenses()
+        }
+    }, [userData, user])
+
+    // data for chart
+    useEffect(() => {
+        let newChartData = []
+        for (const expense of expenses ){
+            let found = false
+            for (const data of newChartData) {
+                if (data.label === expense.payerName) {
+                    data.y += expense.amount
+                    found = true
+                    break
+                }
+            }
+            if (!found) {
+                newChartData.push({
+                    y: expense.amount,
+                    label: expense.payerName
+                })
+            }
+        }
+        setData(newChartData)
+    }, [expenses])
+
+    // get owned
+    useEffect(() => {
+    async function getOwned() {
+        const resOwned = await expensesServices.getMyOwnedUsers()
+        if (resOwned) {
+            setOwned(resOwned.owned)
+            
+        } else {
+            toast.error(resOwned.error)
+        }
     }
-    getOwned();
-    }, []);
+    getOwned()
+    },[userData, user])
+
     return (
         <div className="container-fluid d-flex flex-column justify-content-center align-items-center h-100 p-0">
             <Header pageName="Home" pageDescription="Welcome to the home page" />
@@ -41,8 +74,8 @@ function Home() {
                         <div className="card-header fs-5 fw-bold"> Hi {(userData?.user?.name.split(" ")[0])}!</div>
                         <div className="card-body">
                             <h5 className="card-title fs-6 fw-bold">Own and Owneds:</h5>
-                            {Object.keys(owned).map((key) => (
-                                <p className="card-text" key={key}>{key}: <span className={`fw-normal fs-6 fw-bold ${owned[key] > 0 ? "text-success" : "text-danger"}`}>{owned[key]}₪</span></p>
+                            {owned.map((owned, index) => (
+                                <p className="card-text" key={index}>{owned?.ownedName || owned?.ownerName}: <span className={`fw-normal fs-6 fw-bold ${owned?.owned ? "text-danger" : "text-success"}`}>{owned?.amount}₪</span></p>
                             ))}
                         </div>
                     </div>
