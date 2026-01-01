@@ -1,9 +1,3 @@
-const { 
-    default: makeWASocket, 
-    DisconnectReason,
-    getContentType,
-    jidNormalizedUser
-} = require('@whiskeysockets/baileys');
 const pino = require('pino');
 
 const {useMongoDBAuthState} = require('../utils/mongoAuthState');
@@ -21,6 +15,22 @@ const SETUP_PASSWORD = process.env.SETUP_PASSWORD || "1234";
 
 // session map
 const session = new Map();
+
+// Dynamic import for baileys (ES Module)
+let makeWASocket, DisconnectReason, getContentType, jidNormalizedUser;
+let baileysLoaded = false;
+
+async function loadBaileys() {
+    if (baileysLoaded) return;
+    
+    const baileys = await import('@whiskeysockets/baileys');
+    makeWASocket = baileys.default;
+    DisconnectReason = baileys.DisconnectReason;
+    getContentType = baileys.getContentType;
+    jidNormalizedUser = baileys.jidNormalizedUser;
+    
+    baileysLoaded = true;
+}
 
 //text export function
 function getMessageText(msg){
@@ -76,6 +86,9 @@ async function findUserByJid(apartmentId, senderJid) {
 
 //maon function - start baileys session
 async function startSessionForApartment(apartmentId, onQRUpdate = null, onConnected = null){
+    
+    // טען את baileys אם עוד לא נטען
+    await loadBaileys();
     
     const sessionId = apartmentId.toString();
     console.log(`🔄 Starting MongoDB session for apartment: ${sessionId}`);
@@ -266,6 +279,9 @@ if (analysisResult.is_expense && analysisResult.amount > 0){
 
 async function initAllActiveSessions(){
     console.log("🔄 Initializing all active WhatsApp sessions from DB...")
+
+    // טען את baileys אם עוד לא נטען
+    await loadBaileys();
 
     // bring all apartments with whatsappSession
     const distinctSessions = await WhatsAppSession.distinct('sessionId');
