@@ -1,0 +1,59 @@
+[
+  {
+    "_id": "6941b87a7442ae02ef2fd60c",
+    "name": "or haklay",
+    "phone": "0558827804",
+    "email": "or1@gmail.com",
+    "createdAt": "2025-12-16T19:52:26.712Z",
+    "updatedAt": "2025-12-16T19:52:26.712Z",
+    "__v": 33,
+    "apartmentId": "695662c443c60800183c790d",
+    "balance": 0,
+    "owned": [],
+    "whatsappLid": "79688839999652@lid"
+  },
+  {
+    "_id": "6954e9aab06d9bff4746a0fa",
+    "name": "yuval peled",
+    "phone": "0552555555",
+    "email": "yuval1@gmail.com",
+    "createdAt": "2025-12-16T19:52:26.712Z",
+    "updatedAt": "2025-12-16T19:52:26.712Z",
+    "__v": 2,
+    "apartmentId": "6939a333bb95932a91b1c0ca",
+    "balance": -178,
+    "owned": [
+      {
+        "owned": "6954ea1eb06d9bff4746a100",
+        "ownedName": "mika magal",
+        "amount": 177,
+        "_id": "6955a34b7b5ef7ad144ca4b4"
+      }
+    ]
+  },
+  {
+    "_id": "6954ea1eb06d9bff4746a100",
+    "name": "mika magal",
+    "phone": "0532555555",
+    "email": "mika1@gmail.com",
+    "createdAt": "2025-12-16T19:52:26.712Z",
+    "updatedAt": "2025-12-16T19:52:26.712Z",
+    "__v": 33,
+    "apartmentId": "6939a333bb95932a91b1c0ca",
+    "balance": 395,
+    "owned": [
+      {
+        "owner": "6941b87a7442ae02ef2fd60c",
+        "ownerName": "or haklay",
+        "amount": 218,
+        "_id": "6955a34b7b5ef7ad144ca4bb"
+      },
+      {
+        "owner": "6954e9aab06d9bff4746a0fa",
+        "ownerName": "yuval peled",
+        "amount": 177,
+        "_id": "6955a34b7b5ef7ad144ca4bc"
+      }
+    ]
+  }
+]

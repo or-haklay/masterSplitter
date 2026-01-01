@@ -29,23 +29,28 @@ import Footer from './components/footer.jsx'
 
 
 function App() {
-  const { userData } = useAuth();
+  const { userData, user } = useAuth();
   const navigate = useNavigate();
   const [showNavbar, setShowNavbar] = useState(false);
 
 
   useEffect(() => {
-    if(!userData) {
+    if(!userData && !user) {
       setTimeout(() => {
         setShowNavbar(false);
-      }, 5);
+        // Redirect to login if not authenticated and not already on login/register pages
+        const currentPath = window.location.pathname;
+        if (currentPath !== '/login' && currentPath !== '/register') {
+          navigate('/login');
+        }
+      }, 100);
     }
     else {
       setTimeout(() => {
         setShowNavbar(true);
       }, 5);
     }
-  }, [userData, navigate])
+  }, [userData, user, navigate])
 
   return (
     <>

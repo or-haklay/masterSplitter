@@ -1,0 +1,18 @@
+[
+  {
+    "_id": "695662c443c60800183c790d",
+    "name": "or haklay's Apartment",
+    "inviteCode": {
+      "code": "KAFGFN",
+      "createdAt": "2026-01-01T20:12:26.205Z"
+    },
+    "manager": "6941b87a7442ae02ef2fd60c",
+    "members": [
+      "6941b87a7442ae02ef2fd60c"
+    ],
+    "createdAt": "2026-01-01T12:04:20.295Z",
+    "updatedAt": "2026-01-01T12:04:20.295Z",
+    "__v": 0,
+    "whatsappGroupId": "120363423071734200@g.us"
+  }
+]

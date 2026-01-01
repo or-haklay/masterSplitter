@@ -1,0 +1,14 @@
+[
+  {
+    "_id": "6956d64c8bc9bb242a68aa9c",
+    "apartment": "695662c443c60800183c790d",
+    "title": "עוגות לבית",
+    "amount": 60,
+    "payer": "6941b87a7442ae02ef2fd60c",
+    "payerName": "or haklay",
+    "rawMessage": "עוגות לבית 60 שקלים",
+    "splitAmong": [],
+    "createdAt": "2026-01-01T20:17:16.417Z",
+    "__v": 0
+  }
+]
