@@ -1,5 +1,11 @@
 // server.js
 require('dotenv').config();
+
+// Polyfill for Web Crypto API (required for baileys on older Node versions)
+if (!globalThis.crypto) {
+    globalThis.crypto = require('crypto').webcrypto;
+}
+
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
