@@ -37,6 +37,27 @@ export default function Navbar() {
                 </div>
             </nav>
         </div>
+
+        <div className="navbar fixed-top navbar-expand-lg my-bg-secondary d-none d-md-block">
+            <nav className="navbar bg-body-primary">
+                <div className="container-fluid d-flex justify-content-between align-items-center">
+                    <a className="navbar-brand text-white" onClick={() => navigate('/')}><img src={logo} alt="Logo" width="30" height="30" className="d-inline-block align-text-top"/> Master Splitter Expenses</a>
+                    <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
+                        <ul className="navbar-nav">
+                            <li className="nav-item">
+                                <button className="nav-link text-white btn btn-outline-primary" onClick={() => navigate('/')}>Home</button>
+                            </li>
+                            <li className="nav-item">
+                                <button className="nav-link text-white btn btn-outline-primary" onClick={() => navigate('/expenses-list')}>Expenses</button>
+                            </li>
+                            <li className="nav-item">
+                                <button className="nav-link text-white btn btn-outline-primary" onClick={() => navigate('/settings')}>Settings</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
         </>
     )
 }

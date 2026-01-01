@@ -1,7 +1,7 @@
 import httpServices from './httpServices'
 
 async function getApartmentExpenses(apartmentId) {
-    const response = await httpServices.get(`/expenses/${apartmentId}`)
+    const response = await httpServices.get(`/expenses/apartment/${apartmentId}`)
     return response.data
 }
 
@@ -26,8 +26,8 @@ async function createManualExpense(expense) {
     return response.data
 }
 
-async function updateExpense(expenseId, expense) {
-    const response = await httpServices.put(`/expenses/${expenseId}`, expense)
+async function updateExpense(expense) {
+    const response = await httpServices.put(`/expenses/${expense._id}`, expense)
     return response.data
 }
 
@@ -41,7 +41,10 @@ async function getMyOwnedUsers() {
     return response.data
 }
 
-
+async function getExpense(expenseId) {
+    const response = await httpServices.get(`/expenses/${expenseId}`)
+    return response.data
+}
 
 export default {
     getApartmentExpenses,
@@ -49,5 +52,6 @@ export default {
     createManualExpense,
     updateExpense,
     deleteExpense,
-    getMyOwnedUsers
+    getMyOwnedUsers,
+    getExpense
 } 

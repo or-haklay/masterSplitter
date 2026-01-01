@@ -1,10 +1,26 @@
 .env
 node_modules
 
+# Backend
 /backend/baileys_auth_info
 /backend/node_modules
 /backend/.env
+/backend/logs
 
-
+# Frontend
 /frontend/node_modules
 /frontend/.env
+/frontend/dist
+
+# Scripts logs
+/logs
+
+# MongoDB backups
+/backups
+
+# PM2 logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

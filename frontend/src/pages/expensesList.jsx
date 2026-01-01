@@ -4,12 +4,15 @@ import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-hot-toast'
 import useAuth from '../../context/auth.context.jsx'
 import CreateExpense from '../components/models/createExpense'
+import EditExpense from '../components/models/editExpense'
 
 export default function ExpensesList() {
     const [expenses, setExpenses] = useState([])
     const { userData } = useAuth();
     const [isOpenCreateExpenseModel, setIsOpenCreateExpenseModel] = useState(false)
-
+    const [isOpenEditExpenseModel, setIsOpenEditExpenseModel] = useState(false)
+    const [expenseToEdit, setExpenseToEdit] = useState(null)
+    
     const getExpenses = useCallback(async () => {
         try {
             const resExpenses = await expensesServices.getMyApartmentExpenses()
@@ -21,13 +24,13 @@ export default function ExpensesList() {
         } catch (error) {
             toast.error(error.response?.data?.error || 'Failed to fetch expenses')
         }
-    }, [isOpenCreateExpenseModel])
+    }, [isOpenCreateExpenseModel, isOpenEditExpenseModel])
     
     useEffect(() => {
         if (userData) {
             getExpenses()
         }
-    }, [userData])
+    }, [userData, expenseToEdit])
     
     const handleAddExpense = () => {
         setIsOpenCreateExpenseModel(true)
@@ -35,6 +38,8 @@ export default function ExpensesList() {
 
     const handleEditExpense = (expenseId) => {
         console.log('edit expense', expenseId)
+        setExpenseToEdit(expenseId)
+        setIsOpenEditExpenseModel(true)
     }
 
     const handleDeleteExpense = async (expenseId) => {
@@ -87,6 +92,7 @@ export default function ExpensesList() {
                 <button className="btn btn-success" style={{ position: 'fixed', bottom : '80px', left: '40px', transform: 'translateX(-50%)' }} onClick={() => handleAddExpense()}>
                     <i className="bi bi-plus-circle"></i>
                 </button>
+                <EditExpense isOpen={isOpenEditExpenseModel} setIsOpenEditExpenseModel={setIsOpenEditExpenseModel} expenseToEdit={expenseToEdit} setExpenseToEdit={setExpenseToEdit}/>
             <CreateExpense isOpen={isOpenCreateExpenseModel} setIsOpenCreateExpenseModel={setIsOpenCreateExpenseModel} expenses={expenses} setExpenses={setExpenses}/>
         </div>
     )
