@@ -26,6 +26,9 @@ const { initAllActiveSessions } = require('./services/baileysService');
 // Initialize Express application
 const app = express();
 
+// Trust proxy - we're behind Nginx
+app.set('trust proxy', 1);
+
 // Security Middlewares
 app.use(helmet());
 
