@@ -1,7 +1,24 @@
-const {proto , initAuthCreds, BufferJSON} = require('@whiskeysockets/baileys');
 const WhatsAppSession = require('../models/WhatsAppSession');
 
+// Dynamic import for baileys (ES Module)
+let proto, initAuthCreds, BufferJSON;
+let baileysLoaded = false;
+
+async function loadBaileys() {
+    if (baileysLoaded) return;
+    
+    const baileys = await import('@whiskeysockets/baileys');
+    proto = baileys.proto;
+    initAuthCreds = baileys.initAuthCreds;
+    BufferJSON = baileys.BufferJSON;
+    
+    baileysLoaded = true;
+}
+
 const useMongoDBAuthState = async (sessionId) => {
+    // טען את baileys אם עוד לא נטען
+    await loadBaileys();
+    
     //1 - get session from database
     const readData = async (key) =>{
         try {
