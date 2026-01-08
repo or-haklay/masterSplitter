@@ -32,6 +32,10 @@ app.set('trust proxy', 1);
 // Security Middlewares
 app.use(helmet());
 
+// Body parser - MUST be before routes
+app.use(express.json()); 
+app.use(morgan('dev'));
+
 // Rate limiting - limit each IP to 100 requests per 15 minutes
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -45,9 +49,6 @@ app.use(cors({
     origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     credentials: true
 }));
-
-app.use(express.json()); 
-app.use(morgan('dev'));
 
 // Connect to the database
 connectDB();
