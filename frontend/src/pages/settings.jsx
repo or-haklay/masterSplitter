@@ -13,7 +13,7 @@ export default function Settings() {
             <Button text="Logout" onClick={() => navigate('/logout')} />
             {!userData?.user?.apartmentId && <Button text="Connect to Group" onClick={() => navigate('/connect-group')} />}
             {userData?.user?.apartmentId && <Button text="Invate Friend" onClick={() => navigate('/invate-friend')} />}
-            {userData?.user?.apartmentId && <Button text="Connect Apartment" onClick={() => navigate('/connect-apartment')} />}
+            {!userData?.user?.apartmentId && <Button text="Connect Apartment" onClick={() => navigate('/connect-apartment')} />}
         </div>
     )
 }
