@@ -180,7 +180,78 @@ async function getExpense(req, res) {
     }
 }
 
+async function createSettlement(req, res) {
+    try{
+        //request validation
+        const { apartmentId, recipient, amount } = req.body;
 
+        if (!apartmentId) return res.status(400).json({ error: 'Apartment ID is required' });
+        if (!recipient) return res.status(400).json({ error: 'Recipient ID is required' });
+        if (!amount || isNaN(amount)) return res.status(400).json({ error: 'Valid amount is required' });
+        
+        //system validation
+        const apartment = await Apartment.findOne({ _id: apartmentId });
+        if (!apartment) return res.status(404).json({ error: 'Apartment not found' });
+
+        const recipientUser = await User.findOne({ _id: recipient });
+        if (!recipientUser) return res.status(404).json({ error: 'Recipient not found' });
+
+        const payer = await User.findOne({ _id: req.user.id });
+        if (!payer) return res.status(404).json({ error: 'Payer not found' });
+
+        //process
+        const newSettlement = await Expense.create({
+            apartment: apartmentId,
+            title: 'Settlement from ' + recipientUser.name + ' to ' + payer.name + ' for ' + amount + '₪ (' + new Date().toLocaleDateString() + ')',
+            type: 'SETTLEMENT',
+            status: 'PENDING',
+            recipient: recipientUser._id,
+            amount: amount,
+            payer: payer._id,
+            payerName: payer.name,
+            rawMassage: "Settlement via app by " + payer.name
+        });
+
+        await refreshOwned(apartmentId);
+        //response
+        return res.status(201).json({ status: 201, message: 'Settlement created successfully', settlement: newSettlement });
+    }catch(err){
+        return res.status(500).json({ error: err.message });
+    }
+}
+
+async function updateSettlementStatus(req, res){
+    try{
+        //request validation
+        const { settlementId } = req.params;
+        const { status } = req.body;
+        if (!settlementId) return res.status(400).json({ error: 'Settlement ID is required' });
+        if (!status) return res.status(400).json({ error: 'Status is required' });
+        
+        //system validation
+        const settlement = await Expense.findOne({ _id: settlementId });
+        if (!settlement) return res.status(404).json({ error: 'Settlement not found' });
+        if (settlement.type !== 'SETTLEMENT') return res.status(400).json({ error: 'Expense is not a settlement' });
+
+        if (!['APPROVED', 'REJECTED'].includes(status)) {
+            return res.status(400).json({ error: 'Invalid status' });
+        }
+
+        const updatedSettlement = await Expense.findOneAndUpdate(
+            { _id: settlementId },
+            { $set: { status: status } },
+            { new: true }
+        );
+
+        if (!updatedSettlement) return res.status(404).json({ error: 'Settlement not found' });
+        await refreshOwned(settlement.apartment);
+        //response
+        return res.status(200).json({ message: 'Settlement status updated successfully', settlement: updatedSettlement });
+
+    }catch(err){
+        return res.status(500).json({ error: err.message });
+    }
+} 
 
 module.exports = {
     createManualExpense,
@@ -189,4 +260,6 @@ module.exports = {
     updateExpense,
     getMyApartmentExpenses,
     getExpense,
+    createSettlement,
+    updateSettlementStatus,
 }

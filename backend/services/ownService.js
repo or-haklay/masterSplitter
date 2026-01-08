@@ -17,23 +17,38 @@ async function refreshOwned(apartmentId) {
 
         //*process*//
         //calculate apartment overall
+        
         let apartmentOverall = 0;
         for (const expense of expenses) {
-            apartmentOverall = apartmentOverall + expense.amount;
+            if (expense.type !== 'SETTLEMENT') {
+                apartmentOverall = apartmentOverall + expense.amount;
+            }
         }
 
         //calculate user balance
         for (const userId of users) {
             let userPaid = 0;
-            for (const expense of expenses) {
-                if (expense.payer && String(expense.payer) == String(userId)) {
-                        userPaid = userPaid + expense.amount;
+
+        for (const expense of expenses) {
+            const isPayer = expense.payer && String(expense.payer) == String(userId);
+            const isRecipient = expense.recipient && String(expense.recipient) == String(userId);
+
+            if (expense.type !== 'SETTLEMENT' && isPayer) {
+                userPaid = userPaid + expense.amount;
+            }
+
+            if (expense.type === 'SETTLEMENT' && expense.status === 'APPROVED') {
+                if (isPayer) {
+                    userPaid = userPaid + expense.amount;
+                }
+                if (isRecipient) {
+                    userPaid = userPaid - expense.amount;
                 }
             }
-            const userBalance = userPaid - (Math.round(apartmentOverall/users.length));            
-            await User.findOneAndUpdate({ _id: userId }, { balance: userBalance });
         }
-        
+        const userBalance = userPaid - (Math.round(apartmentOverall / users.length));            
+        await User.findOneAndUpdate({ _id: userId }, { balance: userBalance });
+    }
         //split users to 2 groups - positive and negative balance
         const positiveBalanceUsers = [];
         const negativeBalanceUsers = [];
