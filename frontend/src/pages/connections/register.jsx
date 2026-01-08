@@ -40,11 +40,9 @@ export default function Register() {
             "string.pattern.base": "Phone number must be 10 digits long",
             "string.empty": "Phone number is required",
           }),
-          name: Joi.string().pattern(/^[a-zA-Z]+$/).required().min(3).max(50).label("Name").messages({
-            "string.pattern.base": "Name must contain only letters",
+          name: Joi.string().pattern(/^[a-zA-Z\u0590-\u05FF\s]+$/).required().min(3).max(50).label("Name").messages({
+            "string.pattern.base": "Name must contain only letters and spaces",
               "string.empty": "Name is required",
-              "string.min": "Name must be at least 3 characters long",
-              "string.max": "Name must be at most 50 characters long",
             }),
         })
         const { error } = schema.validate(values, { abortEarly: false });
