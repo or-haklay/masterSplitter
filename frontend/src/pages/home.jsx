@@ -1,17 +1,18 @@
 
-import logo from '../assets/logo-glow.png'
 import Header from '../components/header'
 import PieChartComponent from '../components/pieChart'
 import useAuth from "../../context/auth.context.jsx";
 import { useState, useEffect } from 'react';
 import expensesServices from '../services/expensesServices'
 import { toast } from 'react-hot-toast'
+import CreateSettlement from '../components/models/createSettlement'
+import Button from '../components/common/button'
 
 function Home() {
     const [expenses, setExpenses] = useState([])
     const { user, userData } = useAuth();
     const [owned, setOwned] = useState([])
-
+    const [isOpenCreateSettlementModel, setIsOpenCreateSettlementModel] = useState(false)
     const [data, setData] = useState()
 
     // get expenses
@@ -82,8 +83,10 @@ function Home() {
                     <div className="dlex-grow-1 col-12 col-md-6">
                         <PieChartComponent data={data} title="Expenses" />
                     </div>
+                    <Button onClick={() => setIsOpenCreateSettlementModel(true)} text="Create Settlement" />
                 </div>
             </div>
+            <CreateSettlement isOpen={isOpenCreateSettlementModel} setIsOpenCreateSettlementModel={setIsOpenCreateSettlementModel} />
         </div>
     );
 }

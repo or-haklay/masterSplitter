@@ -46,6 +46,21 @@ async function getExpense(expenseId) {
     return response.data
 }
 
+async function createSettlement(settlement) {
+    const newSettlement = {
+        apartmentId: settlement.apartment,
+        recipient: settlement.recipient,
+        amount: settlement.amount,
+    }
+    const response = await httpServices.post('/expenses/settlement', newSettlement)
+    return response.data
+}
+
+async function updateSettlementStatus(settlementId, status) {
+    const response = await httpServices.put(`/expenses/settlement/${settlementId}`, { status })
+    return response.data
+}
+
 export default {
     getApartmentExpenses,
     getMyApartmentExpenses,
@@ -53,5 +68,7 @@ export default {
     updateExpense,
     deleteExpense,
     getMyOwnedUsers,
-    getExpense
+    getExpense,
+    createSettlement,
+    updateSettlementStatus,
 } 
