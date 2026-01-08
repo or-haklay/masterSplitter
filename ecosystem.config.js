@@ -1,3 +1,6 @@
+require('dotenv').config({ path: './backend/.env' });
+
+
 module.exports = {
   apps: [
     {
@@ -8,11 +11,11 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
         PORT: 5001,
-        MONGO_URI: 'mongodb://localhost:27017/master_splitter',
-        JWT_SECRET: 'mflaYL3q8WOZteCJqWmlwXE1JJuutETtn/mkeYnnyVM=',
-        OPENAI_API_KEY: 'sk-proj-g2fWQVNZN9ujhOY_xpjXuYX_IOhcsOC60btKIumnyUVXs4srngC_QPliBE8Q-NeYTl38khaXb4T3BlbkFJqK0tupGwOAPZd3oS-xasx_iAF3eTFRONTEND',
-        SETUP_PASSWORD: '2506',
-        FRONTEND_URL: 'https://mastersplitter.hayotush.com'
+        MONGO_URI: process.env.MONGO_URI  ,
+        JWT_SECRET: process.env.JWT_SECRET,
+        OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+        SETUP_PASSWORD: process.env.SETUP_PASSWORD,
+        FRONTEND_URL: process.env.FRONTEND_URL
       },
       error_file: './logs/backend-error.log',
       out_file: './logs/backend-out.log',
