@@ -33,7 +33,7 @@ const userRegisterValidationSchema = JOI.object({
     name: JOI.string().required(),
     phone: JOI.string().required().pattern(/^[0-9]{10}$/),
     email: JOI.string().required().email(),
-    password: JOI.string().required().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
+    password: JOI.string().required().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])[A-Za-z\d@$!%*?&]{8,}$/),
 })
 
 const validateUserRegister = (user) => {
@@ -43,7 +43,7 @@ const validateUserRegister = (user) => {
 
 const userLoginValidationSchema = JOI.object({
     email: JOI.string().required().email(),
-    password: JOI.string().required().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
+    password: JOI.string().required().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])[A-Za-z\d@$!%*?&]{8,}$/),
 })
 
 const validateUserLogin = (user) => {

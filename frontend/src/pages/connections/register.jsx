@@ -32,8 +32,8 @@ export default function Register() {
               "string.empty": "Email is required",
               "string.min": "Email must be at least 5 characters long",
             }),
-          password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/).label("Password").required().messages({
-            "string.pattern.base": "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character. Password must be at least 8 characters long",
+          password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])[A-Za-z\d@$!%*?&]{8,}$/).label("Password").required().messages({
+            "string.pattern.base": "Password must contain at least one uppercase letter, one lowercase letter, one number. Password must be at least 8 characters long",
             "string.empty": "Password is required",
           }),
           phone: Joi.string().required().pattern(/^[0-9]{10}$/).label("Phone").messages({

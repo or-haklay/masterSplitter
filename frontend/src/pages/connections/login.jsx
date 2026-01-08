@@ -25,7 +25,10 @@ function LogIn() {
           .min(5)
           .email({ tlds: false })
           .label("Email"),
-        password: Joi.string().min(6).max(20).label("Password").required(),
+        password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])[A-Za-z\d@$!%*?&]{8,}$/).label("Password").required().messages({
+          "string.pattern.base": "Password must contain at least one uppercase letter, one lowercase letter, one number. Password must be at least 8 characters long",
+          "string.empty": "Password is required",
+        }),
       });
       const { error } = schema.validate(values, { abortEarly: false });
       if (!error) {
