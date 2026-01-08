@@ -164,9 +164,35 @@ async function startSessionForApartment(apartmentId, onQRUpdate = null, onConnec
                 if (text.startsWith(`!connect_group `) && isGroup){
                     const password = text.replace('!connect_group', '').trim();
                     if (password === SETUP_PASSWORD){
-                        apartment.whatsappGroupId = chatId;
-                        await apartment.save();
-                        await sock.sendMessage(chatId, { text: '✅ קבוצה מקושרת בהצלחה!' });
+                        try {
+                            // בדוק אם הקבוצה כבר מחוברת לדירה הזאת
+                            if (apartment.whatsappGroupId === chatId) {
+                                await sock.sendMessage(chatId, { text: '✅ הקבוצה כבר מקושרת לדירה הזאת!' });
+                                continue;
+                            }
+                            
+                            // בדוק אם הקבוצה מחוברת לדירה אחרת
+                            const existingApartment = await Apartment.findOne({ whatsappGroupId: chatId });
+                            if (existingApartment && existingApartment._id.toString() !== apartmentId) {
+                                await sock.sendMessage(chatId, { 
+                                    text: '❌ הקבוצה הזאת כבר מחוברת לדירה אחרת!\nאם אתה רוצה לשנות את החיבור, צור קשר עם המנהל.' 
+                                });
+                                continue;
+                            }
+                            
+                            apartment.whatsappGroupId = chatId;
+                            await apartment.save();
+                            await sock.sendMessage(chatId, { text: '✅ קבוצה מקושרת בהצלחה!' });
+                        } catch (err) {
+                            console.error('❌ Error connecting group:', err);
+                            if (err.code === 11000) {
+                                await sock.sendMessage(chatId, { 
+                                    text: '❌ הקבוצה כבר מחוברת. אנא נסה שוב או פנה למנהל.' 
+                                });
+                            } else {
+                                await sock.sendMessage(chatId, { text: '❌ שגיאה בחיבור הקבוצה' });
+                            }
+                        }
                     }
                     continue;
                 }
