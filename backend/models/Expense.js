@@ -12,6 +12,20 @@ const ExpenseSchema = new Schema({
     required: true,
     index: true 
   },
+  type:{
+    type: String,
+    enum: ['EXPENSE', 'SETTLEMENT'],
+    default: 'EXPENSE'
+  },
+  status: {
+    type: String,
+    enum: ['PENDING', 'APPROVED', 'REJECTED'],
+    default: 'APPROVED' // הוצאה רגילה מאושרת אוטומטית
+  },
+  recipient: {
+    type: ObjectId,
+    ref: 'User'
+  },
   // ---------------------------
   title: {
     type: String,

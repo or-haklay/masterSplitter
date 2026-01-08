@@ -22,7 +22,7 @@ async function connectUserToApartment(req, res) {
         if (!authHeader) return res.status(401).json({ error: 'No token provided' });
 
         const token = authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : authHeader;
-        const decoded = jwt.verify(token, process.env.JWT_KEY);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         if (!decoded) return res.status(401).json({ error: 'Invalid token' });
 
         const userId = decoded.userId;
@@ -84,7 +84,7 @@ async function getMyApartment(req, res) {
         if (!token) return res.status(401).json({ error: 'No token provided' });
 
         //system validation
-        const decoded = jwt.verify(token, process.env.JWT_KEY);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         if (!decoded) return res.status(401).json({ error: 'Invalid token' });
 
         const user = await User.findOne({ _id: decoded.userId });
@@ -112,7 +112,7 @@ async function connectToGroup(req, res) {
         if (!authHeader) return res.status(401).json({ error: 'No token provided' });
 
         const token = authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : authHeader;
-        const decoded = jwt.verify(token, process.env.JWT_KEY);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         if (!decoded) return res.status(401).json({ error: 'Invalid token' });
         const userId = decoded.userId;
 
@@ -149,7 +149,7 @@ async function getInviteCode(req, res) {
         if (!token) return res.status(401).json({ error: 'No token provided' });
 
         //system validation
-        const decoded = jwt.verify(token, process.env.JWT_KEY);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         if (!decoded) return res.status(401).json({ error: 'Invalid token' });
         const user = await User.findOne({ _id: decoded.userId });
         if (!user) return res.status(404).json({ error: 'User not found' });

@@ -8,9 +8,9 @@
     const qrcode = require('qrcode-terminal');
     const pino = require('pino');
 
-    const { analyzeMessageForExpense } = require('./backend/services/aiService');
-    const Expense = require('./backend/models/Expense');
-    const Apartment = require('./backend/models/Apartment');
+    const { analyzeMessageForExpense } = require('../backend/services/aiService');
+    const Expense = require('../backend/models/Expense');
+    const Apartment = require('../backend/models/Apartment');
 
     const SETUP_PASSWORD = process.env.SETUP_PASSWORD || "1234"
     const AUTH_FOLDER = 'baileys_auth_info';

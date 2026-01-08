@@ -79,8 +79,8 @@ async function getMyApartmentExpenses(req, res) {
     try {
         //request validation
         const token = req.headers.authorization;
-        if (!token) return res.status(400).json({ error: 'Token is required' });
-        const decoded = jwt.verify(token, process.env.JWT_KEY);
+        if (!token) return res.status(401).json({ error: 'No token provided' });
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         if (!decoded) return res.status(401).json({ error: 'Invalid token' });
         const userId = decoded.userId;
         
