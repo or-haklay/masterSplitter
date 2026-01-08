@@ -1,5 +1,3 @@
-require('dotenv').config({ path: './backend/.env' });
-
 module.exports = {
   apps: [
     {
@@ -7,14 +5,10 @@ module.exports = {
       script: './backend/server.js',
       instances: 1,
       exec_mode: 'fork',
+      env_file: './backend/.env',
       env: {
         NODE_ENV: 'production',
-        PORT: 5001,
-        MONGO_URI: process.env.MONGO_URI  ,
-        JWT_SECRET: process.env.JWT_SECRET,
-        OPENAI_API_KEY: process.env.OPENAI_API_KEY,
-        SETUP_PASSWORD: process.env.SETUP_PASSWORD,
-        FRONTEND_URL: process.env.FRONTEND_URL
+        PORT: 5001
       },
       error_file: './logs/backend-error.log',
       out_file: './logs/backend-out.log',
@@ -28,4 +22,3 @@ module.exports = {
     }
   ]
 };
-
