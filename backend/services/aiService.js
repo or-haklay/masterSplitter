@@ -1,13 +1,20 @@
 // services/aiService.js
 const OpenAI = require('openai');
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-    project: process.env.OPENAI_PROJECT_ID
-});
-
 async function analyzeMessageForExpense(text, senderName) {
     console.log(`🔍 DEBUG: Analyzing with GPT-5-Nano: ${text}`);
+    
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+        console.error("❌ OPENAI_API_KEY is missing!");
+        return { is_expense: false };
+    }
+    console.log(`🔑 Using API Key: ${apiKey.substring(0, 15)}...${apiKey.substring(apiKey.length - 4)}`);
+
+    // Create client fresh each time to ensure env vars are loaded
+    const openai = new OpenAI({
+        apiKey: apiKey,
+    });
 
     try {
         const response = await openai.responses.create({
@@ -21,11 +28,8 @@ async function analyzeMessageForExpense(text, senderName) {
                     content: `${text}`
                 }
             ], 
-            store: true,
-            include: [
-                "reasoning.encrypted_content",
-                "web_search_call.action.sources"
-            ]
+            reasoning: {},
+            store: true
         });
         console.log("🔍 DEBUG: Raw Response Structure:", response);
         
