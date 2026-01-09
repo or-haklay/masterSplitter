@@ -7,6 +7,8 @@ const { User } = require('../models/User');
 const generateInviteCode = require('../utils/generateCode');
 
 let qrCache = new Map();
+// Map to store userId -> apartmentId for pending connections (before QR scan)
+let pendingConnections = new Map();
 
 async function connectApartment(req, res){
     try{
@@ -61,8 +63,15 @@ if (!apartment) {
                 user.apartmentId = apartment._id;
                 await user.save({ validateBeforeSave: false });
             }
+            
+            // וודא שהמשתמש ב-members (אם הוא מנהל)
+            if (!apartment.members.includes(user._id)) {
+                apartment.members.push(user._id);
+                await apartment.save();
+            }
         } else {
             // באמת אין דירה, צור אחת חדשה
+            // אבל אל תשייך את המשתמש עד שהחיבור יצליח
             const inviteCode = generateInviteCode();
             
             apartment = await Apartment.create({
@@ -72,13 +81,15 @@ if (!apartment) {
                     createdAt: new Date()
                 },
                 manager: user._id,
-                members: [user._id]
+                members: [] // לא נוסיף את המשתמש עד שהחיבור יצליח
             });
             
             finalApartmentId = apartment._id.toString();
             
-            user.apartmentId = apartment._id;
-            await user.save({ validateBeforeSave: false });
+            // שמור את ה-userId כדי לשייך אותו אחרי שהחיבור יצליח
+            pendingConnections.set(finalApartmentId, user._id.toString());
+            
+            // אל תשייך את המשתמש עכשיו - רק אחרי שהחיבור יצליח
         }
     } catch (err) {
         console.error(`❌ Error creating apartment:`, err);
@@ -95,8 +106,32 @@ if (!apartment) {
         // process - התחל תהליך חיבור
         await startSessionForApartment(finalApartmentId, (qrCode) => {
             qrCache.set(finalApartmentId, qrCode);
-        }, () => {
+        }, async () => {
+            // כשהחיבור הצליח - שייך את המשתמש לדירה
             qrCache.delete(finalApartmentId);
+            
+            const pendingUserId = pendingConnections.get(finalApartmentId);
+            if (pendingUserId) {
+                try {
+                    const userToConnect = await User.findById(pendingUserId);
+                    if (userToConnect && !userToConnect.apartmentId) {
+                        userToConnect.apartmentId = finalApartmentId;
+                        await userToConnect.save({ validateBeforeSave: false });
+                        
+                        // הוסף את המשתמש ל-members של הדירה
+                        const apartmentToUpdate = await Apartment.findById(finalApartmentId);
+                        if (apartmentToUpdate && !apartmentToUpdate.members.includes(pendingUserId)) {
+                            apartmentToUpdate.members.push(pendingUserId);
+                            await apartmentToUpdate.save();
+                        }
+                        
+                        console.log(`✅ User ${userToConnect.name} connected to apartment ${finalApartmentId} after successful QR scan`);
+                    }
+                    pendingConnections.delete(finalApartmentId);
+                } catch (err) {
+                    console.error(`❌ Error connecting user to apartment after QR scan:`, err);
+                }
+            }
         })
         
         //response

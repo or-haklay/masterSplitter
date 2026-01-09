@@ -1,5 +1,6 @@
 // server.js
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 // Polyfill for Web Crypto API (required for baileys on older Node versions)
 if (!globalThis.crypto) {
