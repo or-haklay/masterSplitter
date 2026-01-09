@@ -211,6 +211,9 @@ if (text.startsWith('!connect_my ') && isGroup) {
     }
     
     // בדוק שהמשתמש קיים בדירה
+    // Clean up any potential bad data in user.owned before fetching
+    await refreshOwned(apartment._id);
+
     const normalizedPhone = phone.replace(/^972/, '').replace(/^0/, '');
     const user = await User.findOne({
         apartmentId: apartment._id,

@@ -102,16 +102,20 @@ async function refreshOwned(apartmentId) {
     //calculate the ownership between positive and negative balance users
 
     //update the users
-    for (const user of users) {
-        user.owned = [];
+    for (const userId of users) {
+        const owned = [];
         for (const ownership of usersOwnership) {
-            if (String(ownership.owned) == String(user)) {
-                user.owned.push({owner: ownership.owner, ownerName: ownership.ownerName, amount: ownership.ownedAmount});
-            }else if (String(ownership.owner) == String(user)) {
-                user.owned.push({owned: ownership.owned, ownedName: ownership.ownedName, amount: ownership.ownedAmount});
+            if (String(ownership.owned) == String(userId) || String(ownership.owner) == String(userId)) {
+                owned.push({
+                    owner: ownership.owner,
+                    ownerName: ownership.ownerName,
+                    owned: ownership.owned,
+                    ownedName: ownership.ownedName,
+                    amount: ownership.ownedAmount
+                });
             }
         }
-        await User.findOneAndUpdate({ _id: user }, { owned: user.owned });
+        await User.findOneAndUpdate({ _id: userId }, { owned: owned });
     }
 
     return true;

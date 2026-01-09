@@ -7,7 +7,7 @@ import apartmentServices from '../../services/apartmentServices'
 import expensesServices from '../../services/expensesServices'
 import { toast } from 'react-hot-toast'
 
-export default function Create({ isOpen, setIsOpenCreateExpenseModel, setExpenseToEdit }) {
+export default function CreateSettlement({ isOpen, setIsOpenCreateSettlementModel, setSettlementToEdit }) {
     const { userData } = useAuth();
     const [apartment, setApartment] = useState(null);
     const [ownedUsers, setOwnedUsers] = useState([]);
@@ -30,8 +30,8 @@ export default function Create({ isOpen, setIsOpenCreateExpenseModel, setExpense
     if (!isOpen) return null;
 
     const handleClose = () => {
-        setIsOpenCreateExpenseModel(false);
-        setExpenseToEdit(null)
+        setIsOpenCreateSettlementModel(false);
+        setSettlementToEdit(null)
         setAmount(0);
         setRecipient(null);
     }
