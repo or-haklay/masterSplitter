@@ -182,8 +182,32 @@ async function startSessionForApartment(apartmentId, onQRUpdate = null, onConnec
                             
                             apartment.whatsappGroupId = chatId;
                             await apartment.save();
-                            await sock.sendMessage(chatId, { text: '✅ קבוצה מקושרת בהצלחה!' });
-                            await sock.sendMessage(chatId, { text: `כדי להוסיף משתמשים לדירה, שלח:\n!connect_me 0555555555` });
+                            
+                            // הודעת הסבר מפורטת עם קישור לאפליקציה
+                            const frontendUrl = process.env.FRONTEND_URL || 'https://mastersplitter.hayotush.com';
+                            const welcomeMessage = `✅ קבוצה מקושרת בהצלחה לדירה!
+
+🎉 ברוכים הבאים ל-Master Splitter!
+
+📱 **איך זה עובד:**
+המערכת מזהה אוטומטית הוצאות שאתם שולחים בקבוצה ומחלקת אותן ביניכם באופן אוטומטי.
+
+🔗 **גישה לאפליקציית הווב:**
+${frontendUrl}
+
+📋 **פקודות זמינות:**
+
+1️⃣ **!connect_me <מספר טלפון>**
+   לקשר את החשבון שלך לדירה
+   דוגמה: !connect_me 0558827804
+
+💡 **טיפ:** שלחו הודעות עם סכומים (למשל: "שילמתי 150 ש״ח על קניות") והמערכת תזהה אותן אוטומטית ותוסיף אותן למערכת!
+
+⚠️ **חשוב:** כרגע ניתן להוסיף הוצאה אחת בלבד בהודעה.
+
+שאלות? פנו למנהל הדירה.`;
+
+                            await sock.sendMessage(chatId, { text: welcomeMessage });
                         } catch (err) {
                             console.error('❌ Error connecting group:', err);
                             if (err.code === 11000) {
