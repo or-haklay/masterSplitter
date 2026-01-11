@@ -264,7 +264,7 @@ if (text.startsWith('!connect_my ') && isGroup) {
     // שלח הודעת עזרה רק אם זה LID
     if (senderJid.includes('@lid')) {
         await sock.sendMessage(chatId, { 
-            text: `היי ${senderPushName}! 👋\n\nזיהיתי הוצאה אבל אני לא מזהה את המספר שלך.\n\n📱 כדי לקשר את החשבון, שלח:\n!connect_my 0558827804\n\n(החלף במספר שלך)` 
+            text: `היי ${senderPushName}! 👋\n\nזיהיתי הוצאה אבל אני לא מזהה את המספר שלך.\n\n📱 כדי לקשר את החשבון, שלח:\n!connect_my 0555555555\n\n(החלף במספר שלך)` 
         });
     }
     continue;
@@ -286,7 +286,7 @@ if (analysisResult.is_expense && analysisResult.amount > 0){
 
     await refreshOwned(apartment._id);
     console.log(`💰 Expense saved: ${analysisResult.amount} by ${payingUser.name}`);
-}
+
                 // שליחת תגובת אימוג'י ✓ על ההודעה
                 await sock.sendMessage(chatId, { 
                     react: { 
@@ -294,7 +294,7 @@ if (analysisResult.is_expense && analysisResult.amount > 0){
                         key: msg.key 
                     } 
                 });
-                
+            }
             }catch(err){
                 console.error(`Error processing msg for apt ${apartmentId}:`, err);
             }
