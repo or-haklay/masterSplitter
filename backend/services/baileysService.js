@@ -183,6 +183,7 @@ async function startSessionForApartment(apartmentId, onQRUpdate = null, onConnec
                             apartment.whatsappGroupId = chatId;
                             await apartment.save();
                             await sock.sendMessage(chatId, { text: '✅ קבוצה מקושרת בהצלחה!' });
+                            await sock.sendMessage(chatId, { text: `כדי להוסיף משתמשים לדירה, שלח:\n!connect_me 0555555555` });
                         } catch (err) {
                             console.error('❌ Error connecting group:', err);
                             if (err.code === 11000) {
@@ -198,14 +199,14 @@ async function startSessionForApartment(apartmentId, onQRUpdate = null, onConnec
                 }
 
                 //2 - connect user phone to LID (NEW!)
-if (text.startsWith('!connect_my ') && isGroup) {
+if (text.startsWith('!connect_me ') && isGroup) {
     const senderJid = msg.key.participant || msg.key.remoteJid;
     const senderPushName = msg.pushName || 'Unknown';
-    const phone = text.replace('!connect_my', '').trim().replace(/[^0-9]/g, '');
+    const phone = text.replace('!connect_me', '').trim().replace(/[^0-9]/g, '');
     
     if (!phone || phone.length < 9) {
         await sock.sendMessage(chatId, { 
-            text: '❌ מספר טלפון לא תקין. נסה שוב:\n!connect_my 0558827804' 
+            text: '❌ מספר טלפון לא תקין. נסה שוב:\n!connect_me 0558827804' 
         });
         continue;
     }
@@ -264,7 +265,7 @@ if (text.startsWith('!connect_my ') && isGroup) {
     // שלח הודעת עזרה רק אם זה LID
     if (senderJid.includes('@lid')) {
         await sock.sendMessage(chatId, { 
-            text: `היי ${senderPushName}! 👋\n\nזיהיתי הוצאה אבל אני לא מזהה את המספר שלך.\n\n📱 כדי לקשר את החשבון, שלח:\n!connect_my 0555555555\n\n(החלף במספר שלך)` 
+            text: `היי ${senderPushName}! 👋\n\nזיהיתי הוצאה אבל אני לא מזהה את המספר שלך.\n\n📱 כדי לקשר את החשבון, שלח:\n!connect_me 0555555555\n\n(החלף במספר שלך)` 
         });
     }
     continue;
