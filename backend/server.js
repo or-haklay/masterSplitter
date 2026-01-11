@@ -52,10 +52,16 @@ app.use(cors({
 }));
 
 // Connect to the database
-connectDB();
-
-// Start all active sessions from the database
-initAllActiveSessions();
+(async () => {
+    try {
+      await connectDB();
+      // Start all active sessions from the database after connection is established
+      await initAllActiveSessions();
+    } catch (error) {
+      console.error('❌ Error initializing database or sessions:', error);
+      process.exit(1);
+    }
+  })();
 
 // Health check endpoint
 app.get('/health', (req, res) => {

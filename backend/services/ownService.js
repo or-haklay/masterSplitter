@@ -72,6 +72,10 @@ async function refreshOwned(apartmentId) {
         usersOwnership = [];
         for (const positiveUser of positiveBalanceUsers) {
             for (const debtInfo of remainingDebts) {
+                // Skip if trying to create debt to self
+                if (String(positiveUser._id) === String(debtInfo._id)) {
+                    continue;
+                }
                 while (positiveUser.balance > 0 && debtInfo.remainingDebt > 0) {
                     if (positiveUser.balance >= debtInfo.remainingDebt) {
                         usersOwnership.push({
@@ -86,9 +90,9 @@ async function refreshOwned(apartmentId) {
                     }else {
                         usersOwnership.push({
                             owned: positiveUser._id,
+                            ownedName: positiveUser.name,
                             owner: debtInfo._id,
                             ownerName: debtInfo.name,
-                            ownedName: positiveUser.name,
                             ownedAmount: positiveUser.balance
                         });
                         debtInfo.remainingDebt = debtInfo.remainingDebt - positiveUser.balance;
@@ -106,12 +110,19 @@ async function refreshOwned(apartmentId) {
         const owned = [];
         for (const ownership of usersOwnership) {
             if (String(ownership.owned) == String(userId) || String(ownership.owner) == String(userId)) {
+                // Determine if current user is the one who owes (owner) or the one who is owed (owned)
+                const isOwner = String(ownership.owner) == String(userId);
+                const isOwned = String(ownership.owned) == String(userId);
+                
                 owned.push({
                     owner: ownership.owner,
                     ownerName: ownership.ownerName,
                     owned: ownership.owned,
                     ownedName: ownership.ownedName,
-                    amount: ownership.ownedAmount
+                    amount: ownership.ownedAmount,
+                    // Add flag to indicate if current user is the owner (owes money) or owned (is owed money)
+                    isOwner: isOwner,
+                    isOwned: isOwned
                 });
             }
         }

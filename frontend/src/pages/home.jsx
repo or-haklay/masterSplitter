@@ -75,9 +75,29 @@ function Home() {
                         <div className="card-header fs-5 fw-bold"> Hi {(userData?.user?.name.split(" ")[0])}!</div>
                         <div className="card-body">
                             <h5 className="card-title fs-6 fw-bold">Own and Owneds:</h5>
-                            {owned.map((owned, index) => (
-                                <p className="card-text" key={index}>{owned?.ownedName || owned?.ownerName}: <span className={`fw-normal fs-6 fw-bold ${owned?.owned ? "text-danger" : "text-success"}`}>{owned?.amount}₪</span></p>
-                            ))}
+                            {owned.map((ownedItem, index) => {
+                                // Determine the other user's name and if current user owes or is owed
+                                // If current user is owner (owes money), show who they owe to (ownedName)
+                                // If current user is owned (is owed money), show who owes them (ownerName)
+                                const otherUserName = ownedItem.isOwner ? ownedItem.ownedName : ownedItem.ownerName;
+                                const isOwing = ownedItem.isOwner; // If current user is owner, they owe money (red)
+                                const isOwed = ownedItem.isOwned; // If current user is owned, they are owed money (green)
+                                
+                                // Determine display text and color
+                                const displayText = isOwing 
+                                    ? `חייב ל-${otherUserName}` 
+                                    : `${otherUserName} חייב לך`;
+                                const colorClass = isOwing ? "text-danger" : "text-success";
+                                const sign = isOwing ? "-" : "+";
+                                
+                                return (
+                                    <p className="card-text" key={index}>
+                                        {displayText}: <span className={`fw-normal fs-6 fw-bold ${colorClass}`}>
+                                            {sign}{ownedItem?.amount}₪
+                                        </span>
+                                    </p>
+                                );
+                            })}
                         </div>
                     </div>
                     <div className="dlex-grow-1 col-12 col-md-6">
